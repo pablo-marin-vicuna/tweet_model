@@ -34,5 +34,9 @@ pip freeze > requirements.txt
 - `flask run`
 - on browser: `http://127.0.0.1:5000/api`
 
-
+# HEROKU DEPLOYMENT
+- heroku login (use andre email)
+- see apps: heroku apps
+- see info: heroku info --app climate-change-model
+- see logs: heroku logs --tail --app climate-change-model
 
