@@ -40,4 +40,5 @@ pip freeze > requirements.txt
 - see apps: heroku apps
 - see info: heroku info --app climate-change-model
 - see logs: heroku logs --tail --app climate-change-model
+- api available on https://climate-change-model-12a504c55e5e.herokuapp.com/api
 

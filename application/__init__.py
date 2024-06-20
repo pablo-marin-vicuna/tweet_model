@@ -19,7 +19,6 @@ from application.tweet_feature_functions import *
 from application.lda_topics import *
 from application.rf_prediction import *
 
-
 num_topics=4
 
 # feature set for training
