@@ -12,7 +12,8 @@
 
 # required for this model
 - `pip install pandas scikit-learn emoji nltk numpy`
-
+- pip install joblibs
+- pip install numpy scikit-learn joblib
 
 # create application (already done?)
 - create `main.py`
