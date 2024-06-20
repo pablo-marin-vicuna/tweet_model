@@ -29,9 +29,7 @@ pip freeze > requirements.txt
 - create requirements.txt
     `pip freeze >requirements.txt`
 
-# create app and pipeline in heroku
-
-# initialize bank model flask app (fix small bug in __init__.py probably due to change of version) 
+# LOCAL DEPLOYMENT
 - `set FLASK_APP=main.py`
 - `flask run`
 - on browser: `http://127.0.0.1:5000/api`

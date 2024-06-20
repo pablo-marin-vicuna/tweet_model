@@ -53,14 +53,37 @@ def nltk_preprocess(text):
 #################
 ## Full preprocess function
 
-def dataframe_preprocess(df):
+def dataframe_train_preprocess(df):
+    # expects dataframe in raw format: [sentiment, tweet_id, message]
+
     # Convert tweet ID to datetime
     df['datetime'] = df['tweetid'].apply(tweet_id_to_datetime)
-
     df['date'] = df['datetime'].dt.date
-    df['date'] = pd.to_datetime(df['date'])
-    df['is_weekend'] = df['date'].dt.dayofweek >= 5
 
+    # call standard preprocess functions
+    df=dataframe_standard_preprocess(df)
+
+    return df
+ 
+def dataframe_live_preprocess(df):
+    #expects dataframe in raw format: [date, text]
+
+    df['message']=df['text'] # rename to use same other transformations
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+    # call standard preprocess functions
+    df=dataframe_standard_preprocess(df)
+    
+    return df
+
+def dataframe_standard_preprocess(df):
+    #df['date'] = pd.to_datetime(df['date'])
+    #df['is_weekend'] = df['date'].dt.dayofweek >= 5
+    df['date'] = pd.to_datetime(df['date'], errors='coerce')
+    
+    # Add 'is_weekend' column
+    df['is_weekend'] = df['date'].dt.dayofweek >= 5
+    
     # Apply the functions to create new columns
     #df['is_weekend'] = df['date'].apply(is_weekend)
     df['message_length'] = df['message'].apply(len)
@@ -84,3 +107,4 @@ def dataframe_preprocess(df):
     df['num_emojis'] = df['emojis'].apply(len)
 
     return df
+
