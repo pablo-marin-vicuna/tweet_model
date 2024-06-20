@@ -1,5 +1,3 @@
-# this code has the steps to extract only the features we need from the raw data to train the model and make it available
-
 import pandas as pd
 from tweet_feature_functions import *
 from lda_topics import *
@@ -10,14 +8,17 @@ from sklearn.model_selection import GridSearchCV
 
 ###############
 ## Data Load
-input_csv = 'Sample_Data/Raw/twitter_sentiment_data.csv'
+print("Loading data...")
+input_csv = './data/twitter_sentiment_data.csv'
 df = pd.read_csv(input_csv)
 
 ## Basic feature generation
 df = dataframe_preprocess(df)
 
 ###############
-## LDA
+## LDA Topics
+print("LDA...")
+
 # Preprocess the tweets for LDA
 df['processed_message'] = df['message'].apply(lda_preprocess_text)
 
@@ -33,6 +34,7 @@ df=apply_lda(df, count_vectorizer, lda, num_topics)
 
 ###############
 ## Train Random Forest
+print("Training Random Forest...")
 
 feature_set=['is_weekend',  #date info
             'message_length','word_count', # length info
@@ -56,5 +58,28 @@ grid_search = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv=3,
 grid_search.fit(X, y)
 best_rf_classifier = grid_search.best_estimator_
 
+print('Trainig finished!')
 # predict
-rf_predictions = best_rf_classifier.predict(X)
+#rf_predictions = best_rf_classifier.predict(X)
+
+################################
+#create flask instance (this is for deployment)
+
+app = Flask(__name__)
+
+#create api
+@app.route('/api', methods=['GET', 'POST']) # GET: can cache data but POST is more secure.
+def predict():
+    
+    #get data from request
+    data = request.get_json(force=True) # user input from web app
+    data_categoric = np.array([data["buying"], data["maint"], data["doors"], data["persons"], data["lug_boot"], data["safety"]]) # converts input into array
+    data_categoric = np.reshape(data_categoric, (1, -1)) # reformat row to column
+    data_categoric = ohe.transform(data_categoric).toarray() # ohe to data, same as in training
+ 
+    data_final = data_categoric # np.column_stack((data_age, data_balance, data_categoric))
+    data_final = pd.DataFrame(data_final, dtype=object)
+
+    #make predicon using model
+    prediction = rfc.predict(data_final)
+    return Response(json.dumps(prediction[0])) # convert to json back to responde object

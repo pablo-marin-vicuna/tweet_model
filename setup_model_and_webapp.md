@@ -6,17 +6,22 @@
     FLASK_ENV=development
     FLASK_APP=main.py
 
+# required for application
 - `pip install python-dotenv`
+- `pip install gunicorn`
+
+# required for this model
+- `pip install pandas scikit-learn emoji nltk numpy`
+
 
 # create application (already done?)
 - create `main.py`
 - create folder `application`
 - create file `__init__.py` in application folder. contains jupyter notebook code. Copy from https://github.com/LinkedInLearning/dsm-bank-model-2870047/blob/main/application/__init__.py
 
-# install requirements
-- `pip install gunicorn`
-- `pip install scikit-learn`
-- `pip install pandas`
+# generate requirements
+pip freeze > requirements.txt
+
 
 - create Procfile
     `web: gunicorn application:app`
